@@ -14,7 +14,63 @@ app.use(bodyparser.urlencoded({extended: true}))
 /****** /project */
 app.get('/project', (req,res) => {        
     if(isSearch(req.query)){
-        get(req.query, res)
+        /**********
+         * There's a problem with this query. I can't figure it out. Query works as I expect
+         * the first time, but hangs indefinitely on subsequent requests.
+         **********/
+        db.loadDatabase({}, () => {
+            var projects = db.getCollection('project')
+            if(!projects){
+                return res.sendStatus(500)
+            }
+    
+            if(req.query.projectId){
+                let project = projects.findOne({ 'ID': Number(req.query.projectId) })
+                if(!project){
+                    return res.sendStatus(404)
+                }
+    
+                return res.status(200).send(project)
+            }
+    
+            let nameQuery = null
+            if(req.query.name){
+                nameQuery = {
+                    'Name': { '$regex': req.query.name }
+                }
+            }
+    
+            let workTypeQuery = null
+            if(req.query.workType){
+                workTypeQuery = {
+                    'Work Type': { '$regex': req.query.workType }
+                }
+            }
+    
+            let excludePastDeadlineQuery = null
+            if(req.query.excludePastDeadline){
+                pastDeadlineQuery = {
+                    'Deadline': { '$gt': Date.now()}
+                }
+            }
+    
+            let query = {
+                '$or': []
+            }
+            if(nameQuery) query['$or'].push(nameQuery)
+            if(workTypeQuery) query['$or'].push(workTypeQuery)
+            if(excludePastDeadlineQuery) query['$or'].push(excludePastDeadlineQuery)
+    
+            console.log(query)
+    
+            var result = projects.find(query)
+            if(!result){
+                return res.sendStatus(404)
+            }
+    
+            console.log(result)
+            return res.status(200).send(result)
+        })    
     }
 
     db.loadDatabase({}, () => {
@@ -144,62 +200,6 @@ app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
 function isSearch(query){
     return !(query.projectId == undefined && query.name == undefined && query.workType == undefined && query.deadline == undefined)
-}
-
-function get(params, res){
-    db.loadDatabase({}, () => {
-        var projects = db.getCollection('project')
-        if(!projects){
-            return res.sendStatus(500)
-        }
-
-        if(params.projectId){
-            let project = projects.findOne({ 'ID': Number(params.projectId) })
-            if(!project){
-                return res.sendStatus(404)
-            }
-
-            return res.status(200).send(project)
-        }
-
-        let nameQuery = null
-        if(params.name){
-            nameQuery = {
-                'Name': { '$regex': params.name }
-            }
-        }
-
-        let workTypeQuery = null
-        if(params.workType){
-            workTypeQuery = {
-                'Work Type': { '$regex': params.workType }
-            }
-        }
-
-        let excludePastDeadlineQuery = null
-        if(params.excludePastDeadline){
-            pastDeadlineQuery = {
-                'Deadline': { '$gt': Date.now()}
-            }
-        }
-
-        let query = {
-            '$or': []
-        }
-        if(nameQuery) query['$or'].push(nameQuery)
-        if(workTypeQuery) query['$or'].push(workTypeQuery)
-        if(excludePastDeadlineQuery) query['$or'].push(excludePastDeadlineQuery)
-
-        console.log(query)
-
-        var result = projects.find(query)
-        if(!result){
-            return res.sendStatus(404)
-        }
-
-        console.log(result)
-        return res.status(200).send(result)
-    })    
 }
 
 function handleError(err, res){
