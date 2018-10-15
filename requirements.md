@@ -5,17 +5,17 @@ You are building a Marketplace for Freelancers and Project Managers. The Marketp
 Design and Implement a REST or GraphQL API to support the following requirements:
 Create a Project with at least the following fields: ID, Name, Owner, Description, Work Type (eg, frontend, backend, ux, sysadmin), Deadline, Maximum Budget (starting bid), Lowest Bid (defaults to null), and Lowest Bidder (defaults to null)
 
-[X] Get a Project by ID
-[X] Bid on a Project by ID
-[ ] Query for Projects based on Name (fuzzy match), Work Type, and where the Deadline has not yet passed **Coded, but doesn't function as expected due to db search issues I haven't figured out**
+1. [X] Get a Project by ID
+2. [X] Bid on a Project by ID
+3. [ ] Query for Projects based on Name (fuzzy match), Work Type, and where the Deadline has not yet passed **Coded, but doesn't function as expected due to db search issues I haven't figured out**
 
 Not Required but nice to have:
 
-[ ] Use of Code-Generation Frameworks
-[ ] Authentication and Authorization (passing Username in the request for Create Project and Bid On Project is sufficient to limit the scope of this exercise)
-[ ] Cloud native implementation
-[X] Persistence to disk (using an In-memory database is sufficient)
-[ ] Frontend
+1. [ ] Use of Code-Generation Frameworks
+2. [ ] Authentication and Authorization (passing Username in the request for Create Project and Bid On Project is sufficient to limit the scope of this exercise)
+3. [ ] Cloud native implementation
+4. [X] Persistence to disk (using an In-memory database is sufficient)
+5. [ ] Frontend
 
 Expectations:
 
