@@ -22,3 +22,10 @@ Expectations:
 1. Limit your time on this task to about 1 hour. We don’t expect perfection. When your time is up, you can list things you would have liked to do given more time if that allows you to honor the time limit.
 2. Push your implementation repo onto your personal Github at least 24 hours prior to the on-site interview and notify us.
 3. Come to the on-site interview prepared to explain the rationale for your technology and design pattern choices.
+
+Notes:
+1. Needs lots of refactoring. Some of the methods are entirely too long, and there is a lot of duplicated code.
+2. would like to modularize this code more.
+3. Real world I would like to use a much more robust database solution.
+4. Implementing an actual fuzzy search algorithm.
+5. This simple api might even be able to be written as a collection of serverless functions
