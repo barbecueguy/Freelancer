@@ -12,18 +12,14 @@ app.use(bodyparser.json())
 app.use(bodyparser.urlencoded({extended: true}))
 
 /****** /project */
-app.get('/project', (req,res) => {        
+app.get('/project', (req,res) => {
     if(isSearch(req.query)){
-        /**********
-         * There's a problem with this query. I can't figure it out. Query works as I expect
-         * the first time, but hangs indefinitely on subsequent requests.
-         **********/
         db.loadDatabase({}, () => {
             var projects = db.getCollection('project')
             if(!projects){
                 return res.sendStatus(500)
             }
-    
+
             if(req.query.projectId){
                 let project = projects.findOne({ 'ID': Number(req.query.projectId) })
                 if(!project){
@@ -32,28 +28,28 @@ app.get('/project', (req,res) => {
     
                 return res.status(200).send(project)
             }
-    
+
             let nameQuery = null
             if(req.query.name){
                 nameQuery = {
                     'Name': { '$regex': req.query.name }
                 }
             }
-    
+
             let workTypeQuery = null
             if(req.query.workType){
                 workTypeQuery = {
                     'Work Type': { '$regex': req.query.workType }
                 }
             }
-    
+
             let excludePastDeadlineQuery = null
             if(req.query.excludePastDeadline){
                 pastDeadlineQuery = {
                     'Deadline': { '$gt': Date.now()}
                 }
             }
-    
+
             let query = {
                 '$or': []
             }
@@ -63,26 +59,28 @@ app.get('/project', (req,res) => {
     
             console.log(query)
     
-            var result = projects.find(query)
+            var result = projects.find(nameQuery)
             if(!result){
                 return res.sendStatus(404)
             }
     
             console.log(result)
+            
             return res.status(200).send(result)
         })    
     }
+    else {
+        db.loadDatabase({}, () => {
+            let projects = db.getCollection('project')
+            if(!projects){
+                console.log(`Collection "project" does not exist.`)
+                return res.sendStatus(404)
+            }
 
-    db.loadDatabase({}, () => {
-        let projects = db.getCollection('project')
-        if(!projects){
-            console.log(`Collection "project" does not exist.`)
-            return res.sendStatus(404)
-        }
-
-        let result = projects.findObjects()
-        return res.status(200).send(result)
-    })
+            let result = projects.findObjects()
+            return res.status(200).send(result)
+        })
+    }
 })
 
 app.post('/project', upload.array(), (req, res, next) => {
