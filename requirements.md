@@ -7,7 +7,7 @@ Create a Project with at least the following fields: ID, Name, Owner, Descriptio
 
 1. [X] Get a Project by ID
 2. [X] Bid on a Project by ID
-3. [ ] Query for Projects based on Name (fuzzy match), Work Type, and where the Deadline has not yet passed **Coded, but doesn't function as expected due to db search issues I haven't figured out**
+3. [X] Query for Projects based on Name (fuzzy match), Work Type, and where the Deadline has not yet passed **__ Seems to work on my machine (famous last words), but not a fuzzy match algorithm by any means __**
 
 Not Required but nice to have:
 
@@ -29,3 +29,4 @@ Notes:
 3. Real world I would like to use a much more robust database solution.
 4. Implementing an actual fuzzy search algorithm.
 5. This simple api might even be able to be written as a collection of serverless functions
+6. Actually having unit tests would be nice
